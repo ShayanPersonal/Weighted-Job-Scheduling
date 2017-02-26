@@ -27,6 +27,8 @@ def compute_optimal(intervals, last_compat_list, index):
   
 #Brute force for verification
 def brute_force(intervals):
+  if len(intervals) == 0:
+    return 0, []
   last_compat_list = last_compatible_jobs(intervals)
   ans = compute_optimal(intervals, last_compat_list, len(intervals) - 1)
   return ans, []
