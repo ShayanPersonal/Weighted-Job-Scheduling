@@ -20,7 +20,7 @@ def last_compatible_jobs(intervals):
 
 #Recursive function finds best sum of payoffs up to index. Used in brute force
 def compute_optimal(intervals, last_compat_list, index):
-  if index < 0 or last_compat_list[index] == -1:
+  if last_compat_list[index] == -1:
     return intervals[index][2]
   return max(intervals[index][2] + compute_optimal(intervals, last_compat_list, last_compat_list[index]), compute_optimal(intervals, last_compat_list, index-1))
   
