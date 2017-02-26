@@ -3,7 +3,7 @@ import sys
 from bisect import bisect_right
 
 
-#Find index of rightmost finish time less than or equal to "start" using binary search. Return 0 if none exists.
+#Find index of rightmost finish time less than or equal to "start" using binary search. Return -1 if None exists
 def find_last_compatible(finish_times, start):
     i = bisect_right(finish_times, start)
     if i:
@@ -36,7 +36,7 @@ def brute_force(intervals):
   return ans, []
 
 
-#Computes the solution. Use pre-computed last_compat_list to find subsolutions up to each index.
+#Computes the solution with dynamic programming. Use pre-computed last_compat_list to find subsolutions up to each index.
 def dynamic_solution(intervals):
   last_compat_list = last_compatible_jobs(intervals)
   sub_solutions = [None] * (len(intervals) + 1)
@@ -64,6 +64,9 @@ def dynamic_solution(intervals):
     best_intervals.append(intervals[curr])
     nex = sub_solutions[curr + 1][2]
     curr = sub_solutions[nex + 1][1]
+    
+  #Order from first to last
+  best_intervals.reverse()
     
   #Answer is stored at the end of the list
   return sub_solutions[-1][0], best_intervals
