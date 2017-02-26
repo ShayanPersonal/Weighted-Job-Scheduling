@@ -27,7 +27,7 @@ def compute_optimal(intervals, last_compat_list, index):
   
 #Brute force for verification
 def brute_force(intervals):
-  if len(intervals) == 0:
+  if not intervals:
     return 0, []
   last_compat_list = last_compatible_jobs(intervals)
   ans = compute_optimal(intervals, last_compat_list, len(intervals) - 1)
@@ -46,8 +46,8 @@ def dynamic_solution(intervals):
   best_intervals = []
   
   #Use previous subsolutions to find next subsolution.
-  for index in range(0, len(intervals)):
-    cost = intervals[index][2]
+  for index, job in enumerate(intervals):
+    cost = job[2]
     last_compat_index = last_compat_list[index]
     last_cost = sub_solutions[last_compat_index + 1]
     sub_solutions[index + 1] = max(cost + last_cost, sub_solutions[index])
