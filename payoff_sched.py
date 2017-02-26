@@ -59,9 +59,6 @@ def dynamic_solution(intervals):
     else:
       index -= 1
       
-  #Order from first to last
-  best_intervals.reverse()
-    
   #Answer is stored at the end of the list
   return sub_solutions[-1], best_intervals
   
@@ -89,7 +86,7 @@ def main():
   
   #Print the results
   print("Maximum Payoff: %d" % best_payoff)
-  for interval in best_intervals:
+  for interval in reversed(best_intervals):
       print("%d %d %d" % interval)
     
     
