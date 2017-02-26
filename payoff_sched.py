@@ -3,23 +3,19 @@ import sys
 from bisect import bisect_right
 
 
-#Find index of rightmost finish time less than or equal to "start" using binary search. Return -1 if None exists
+#Find index of rightmost finish time less than or equal to "start" using binary search. Return -1 if none exists
 def find_last_compatible(finish_times, start):
     i = bisect_right(finish_times, start)
     if i:
       return i-1
-    else:
-      return -1
+    return -1
+    
 
 #For each job in the list, find the previous job with the highest compatible finish time (I.E. with a finish time lesser than or equal to the current job's start time)
 def last_compatible_jobs(intervals):
-  last_compat_list = [None] * len(intervals)
   finish_times = [job[1] for job in intervals]
-  for i, job in enumerate(intervals):
-    start = job[0]
-    last_compat_list[i] = (find_last_compatible(finish_times, start))
+  last_compat_list = [find_last_compatible(finish_times, start) for start, _, _ in intervals]
   return last_compat_list
-    
 
 
 #Recursive function finds best sum of payoffs up to index. Used in brute force
@@ -41,35 +37,33 @@ def dynamic_solution(intervals):
   last_compat_list = last_compatible_jobs(intervals)
   sub_solutions = [None] * (len(intervals) + 1)
   
-  #Each index stores a 3-tuple containing the max cost, index of the last job in the subsolution, and index of the last compatible job
-  #The other 2 values are for printing out the full solution.
-  sub_solutions[0] = (0, -1, -1)
+  #Each index stores the best cost you can get up to that index.
+  sub_solutions[0] = 0
   
+  #This will store the path to the best solution
   best_intervals = []
   
   #Use previous subsolutions to find next subsolution.
   for index in range(0, len(intervals)):
     cost = intervals[index][2]
     last_compat_index = last_compat_list[index]
-    last_cost = sub_solutions[last_compat_index + 1][0]
-    if (cost + last_cost > sub_solutions[index][0]):
-      sub_solutions[index + 1] = (cost + last_cost, index, last_compat_index)
-    else:
-      sub_solutions[index + 1] = sub_solutions[index]
+    last_cost = sub_solutions[last_compat_index + 1]
+    sub_solutions[index + 1] = max(cost + last_cost, sub_solutions[index])
       
-  curr = sub_solutions[-1][1]
-  nex = 0
-
-  while nex != -1:
-    best_intervals.append(intervals[curr])
-    nex = sub_solutions[curr + 1][2]
-    curr = sub_solutions[nex + 1][1]
-    
+  #Find path to solution in reverse order
+  index = len(intervals) - 1
+  while index != -1:
+    if intervals[index][2] + sub_solutions[last_compat_list[index] + 1] > sub_solutions[index]:
+      best_intervals.append(intervals[index])
+      index = last_compat_list[index]
+    else:
+      index -= 1
+      
   #Order from first to last
   best_intervals.reverse()
     
   #Answer is stored at the end of the list
-  return sub_solutions[-1][0], best_intervals
+  return sub_solutions[-1], best_intervals
   
   
 #Begin program
