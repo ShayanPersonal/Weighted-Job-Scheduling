@@ -43,7 +43,7 @@ def dynamic_solution(intervals):
   
   #Each index stores a 3-tuple containing the max cost, index of the last job in the subsolution, and index of the last compatible job
   #The other 2 values are for printing out the full solution.
-  sub_solutions[0] = (0, 0, 0)
+  sub_solutions[0] = (0, -1, -1)
   
   best_intervals = []
   
@@ -59,7 +59,7 @@ def dynamic_solution(intervals):
       
   curr = sub_solutions[-1][1]
   nex = 0
-    
+
   while nex != -1:
     best_intervals.append(intervals[curr])
     nex = sub_solutions[curr + 1][2]
